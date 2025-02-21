@@ -20,5 +20,11 @@ namespace WebApi.Controllers
         {
             return ControllerContext.Request.CreateResponse(HttpStatusCode.NotFound);
         }
+
+        // I am adding this method to handle data validation
+        public HttpResponseMessage InvalidData()
+        {
+            return ControllerContext.Request.CreateResponse(HttpStatusCode.BadRequest);
+        }
     }
 }
