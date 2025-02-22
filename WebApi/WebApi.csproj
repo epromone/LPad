@@ -173,14 +173,19 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="InMemoryRepository\IOrderRepository.cs" />
+    <Compile Include="InMemoryRepository\IProductRepository.cs" />
+    <Compile Include="InMemoryRepository\OrderRepository.cs" />
     <Compile Include="InMemoryRepository\ProductRepository.cs" />
     <Compile Include="Models\EnumData.cs" />
     <Compile Include="Models\IdObjectData.cs" />
+    <Compile Include="Models\Orders\Order.cs" />
     <Compile Include="Models\Products\Product.cs" />
     <Compile Include="Models\Users\UserData.cs" />
     <Compile Include="Models\Users\UserModel.cs" />
