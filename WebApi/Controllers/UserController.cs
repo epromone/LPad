@@ -7,6 +7,7 @@ using System.Xml.Linq;
 using BusinessEntities;
 using Core.Services.Users;
 using WebApi.Models.Users;
+using static System.Collections.Specialized.BitVector32;
 
 namespace WebApi.Controllers
 {
@@ -115,7 +116,24 @@ namespace WebApi.Controllers
         [HttpGet]
         public HttpResponseMessage GetUsersByTag(string tag)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+
+            if (string.IsNullOrWhiteSpace(tag))
+            {
+                return InvalidData();
+            }
+
+            // Filter users who have the given tag (case-sensitive match)
+            var users = _getUserService.GetUsers()
+                                      .Where(u => u.Tags != null && u.Tags.Any(t => string.Equals(t, tag, StringComparison.Ordinal)))
+                                      .ToList();
+
+            if (!users.Any())
+            {
+                return DoesNotExist();
+            }
+
+            return Found(users);
         }
     }
 }

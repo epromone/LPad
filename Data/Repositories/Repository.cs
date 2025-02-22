@@ -31,7 +31,7 @@ namespace Data.Repositories
 
         public T Get(Guid id)
         {
-            return _documentSession.Load<T>(id);
+             return _documentSession.Load<T>(id);
         }
 
         protected void DeleteAll<TIndex>() where TIndex : AbstractIndexCreationTask<T>

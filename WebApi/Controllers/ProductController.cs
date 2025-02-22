@@ -1,30 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Web.Helpers;
-using System.Web.Http;
-using System.Xml.Linq;
+﻿using System.Web.Http;
 using WebApi.Models.Products;
 using WebApi.InMemoryRepository;
-using System.Net.Http;
-using BusinessEntities;
-using WebApi.Models.Users;
+using System.Linq;
 
 namespace WebApi.Controllers
 {
-    [RoutePrefix("api/product")]
-    public class ProductController : ApiController
+    [RoutePrefix("products")]
+    public class ProductsController : ApiController
     {
 
-        private readonly ProductRepository _repository = new ProductRepository();
+        private readonly IProductRepository _repository;
+
+        public ProductsController(IProductRepository repository)
+        {
+            _repository = repository;
+        }
 
         [HttpGet]
-        [Route("")]
-        public IEnumerable<Product> GetProducts()
+        [Route("list")]
+        public IHttpActionResult GetProducts(string name = null, int page = 1, int pageSize = 10)
         {
-            return _repository.GetAll();
+            // filterd by product name
+            var products = _repository.GetFiltered(name, page, pageSize);
+            if (products == null || !products.Any())
+            {
+                return NotFound();
+            }
+            return Ok(products);
         }
 
         [HttpGet]
@@ -32,15 +34,23 @@ namespace WebApi.Controllers
         public IHttpActionResult GetProduct(int id)
         {
             var product = _repository.GetById(id);
-            if (product == null) return NotFound();
+            if (product == null)
+            { 
+                return NotFound(); 
+            }
             return Ok(product);
         }
 
         [HttpPost]
-        [Route("")]
+        [Route("create")]
         public IHttpActionResult CreateProduct([FromBody] Product product)
         {
             if (product == null)
+            {
+                return BadRequest("Product is null.");
+            }
+
+            if (!ModelState.IsValid)
             {
                 return BadRequest("Invalid product data.");
             }
@@ -50,22 +60,35 @@ namespace WebApi.Controllers
         }
 
         [HttpPut]
-        [Route("{id:int}")]
+        [Route("update/{id:int}")]
         public IHttpActionResult UpdateProduct(int id, [FromBody] Product product)
         {
-            if (product == null || id != product.Id) return BadRequest("Product ID mismatch.");
+            if (product == null)
+            {
+                return BadRequest("Product is null.");
+            }
+            if (id != product.Id)
+            {
+                return BadRequest("Product ID mismatch."); 
+            }
             var existingProduct = _repository.GetById(id);
-            if (existingProduct == null) return NotFound();
+            if (existingProduct == null)
+            { 
+                return NotFound(); 
+            }
             _repository.Update(product);
             return Ok(product);
         }
 
         [HttpDelete]
-        [Route("{id:int}")]
+        [Route("delete/{id:int}")]
         public IHttpActionResult DeleteProduct(int id)
         {
             var existingProduct = _repository.GetById(id);
-            if (existingProduct == null) return NotFound();
+            if (existingProduct == null) 
+            { 
+                return NotFound();
+            }
             _repository.Delete(id);
             return Ok($"Product {id} deleted.");
         }

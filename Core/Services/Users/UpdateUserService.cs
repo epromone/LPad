@@ -18,7 +18,7 @@ namespace Core.Services.Users
             user.SetAge(age);          
 
             // The calculation annualSalary.Value / 12 should be used if and only if annualSalary has a value. Othewise it will throw an exception.
-            // I am using the ternary func to fix the issue.
+            // I am using a ternary operation to fix the issue.
             user.SetMonthlySalary(annualSalary.HasValue ? annualSalary.Value / 12 : 0);
             user.SetTags(tags);
         }
